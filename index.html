@@ -1,0 +1,138 @@
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title>Hicham Baydoun</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body class="is-preload">
+
+		
+			<div id="header">
+				<span class="logo icon fa-paper-plane"></span>
+				<h1>Hi. This is Hicham Baydoun.</h1>
+				<p>A second year computer science student at LAU Beirut <a href="https://www.lau.edu.lb/">LAU</a>
+				<br />
+				Currently in my
+				undergrad years. A lifetime learner and very good problem solver that loves working in a team. 
+			</div>
+
+		
+			<div id="main">
+
+				<header class="major container medium">
+					<h2>
+					<br />
+					Some projects i made 
+					<br />
+					</h2>
+					
+				</header>
+
+				<div class="box alt container">
+					<section class="feature left">
+						<a href="https://www.roblox.com/games/8157604962/maze-survival" class="image icon solid fa-gamepad"><img src="images/pic01.jpg" alt="" /></a>
+						<div class="content">
+							<h3>maze survival</h3>
+							<p>A roblox survival game where you are out in a maze that is randomly generated with monsteres along side it trying to kill the player.</p>
+						</div>
+					</section>
+					<section class="feature right">
+						<a href="#" class="image icon solid fa-gamepad"><img src="images/pic02.jpg" alt="" /></a>
+						<div class="content">
+							<h3>PARKOUR GAME, KHADDIT ACADEMY, ONLINE</h3>
+							<p>Initiated the game idea, characters, story and development. Worked with a team to build the movements and design of the characters. Designed the overall game platforms. Programmed the parkour obstacles and functionality of the characters currently.</p>
+						</div>
+					</section>
+					<section class="feature left">
+						<a href="#" class="image icon solid fa-gamepad"><img src="images/pic03.jpg" alt="" /></a>
+						<div class="content">
+							<h3>SAIL for Change gaming academy</h3>
+							<p>working on a online first person shooter as a project for the game academy internship initiated the idea working on the story-character development-wapons and more.</p>
+						</div>
+					</section>
+				</div>
+
+				<footer class="major container medium">
+					<h3>My Resume</h3>
+					<p></p>
+					<ul class="actions special">
+						<li><a href="https://drive.google.com/file/d/1f97c-p6ytLkdGtWvNlgiel22qpb7WZnD/view?usp=drive_link" class="button">View CVs </class></a></li>
+					</ul>
+					
+				</footer>
+
+			</div>
+
+		<!-- Footer -->
+		<div id="footer">
+			<div class="container medium">
+				<header class="major last">
+					<h2>want to get in touch?</h2>
+				</header>
+	
+				<p>hit me up with a message.</p>
+	
+				<form id="contact-form">
+					<div class="row">
+						<div class="col-6 col-12-mobilep">
+							<input type="text" name="name" id="name" placeholder="Name" required />
+						</div>
+						<div class="col-6 col-12-mobilep">
+							<input type="email" name="email" id="email" placeholder="Email" required />
+						</div>
+						<div class="col-12">
+							<textarea name="message" id="message" placeholder="Message" rows="6" required></textarea>
+						</div>
+						<div class="col-12">
+							<ul class="actions special">
+								<li><input type="submit" value="Send Message" /></li>
+							</ul>
+						</div>
+					</div>
+				</form>
+	
+				<ul class="icons">
+					<li><a href="https://www.linkedin.com/in/hicham-baydoun/" class="icon brands fa-linkedin"><span class="label">Linkedin</span></a></li>
+					<li><a href="https://github.com/Hicham-Baydoun" class="icon brands fa-github"><span class="label">Github</span></a></li>
+					<li><a href="https://discord.gg/dCPK8fjuWF" class="icon brands fa-discord"><span class="label">discord</span></a></li>
+					<li><a href="https://www.instagram.com/hicham.baydoun_/" class="icon brands fa-instagram"><span class="label">instagram</span></a></li>
+					<li><a href="https://www.reddit.com/user/Hicham_Baydoun-/" class="icon brands fa-reddit"><span class="label">reddit</span></a></li>
+					<li><a href="https://discordapp.com/users/539025372243820555" class="icon brands fa-discord"><span class="label">discord</span></a></li>
+				</ul>
+	
+				<ul class="copyright">
+					<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+				</ul>
+			</div>
+		</div>
+	
+		<!-- Scripts -->
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/browser.min.js"></script>
+		<script src="assets/js/breakpoints.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<script src="assets/js/main.js"></script>
+		<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+		<script>
+			(function(){
+				emailjs.init("7NUhYA1XjBRX6qpii"); // Replace "YOUR_USER_ID" with your EmailJS user ID
+			})();
+	
+			document.getElementById('contact-form').addEventListener('submit', function(event) {
+				event.preventDefault();
+	
+				emailjs.sendForm('service_l51xn2e', 'template_qnivb9o', this)
+					.then(function(response) {
+						console.log('SUCCESS!', response.status, response.text);
+						alert('Message sent successfully!');
+					}, function(error) {
+						console.log('FAILED...', error);
+						alert('Failed to send message.');
+					});
+			});
+		</script>
+	</body>
+	</html>
