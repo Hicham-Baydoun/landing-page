@@ -1,137 +1,76 @@
-<!DOCTYPE HTML>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0b1020" />
+  <title>Dungeon Quest Pot Calculator</title>
+  <style>
+    :root{--bg:#080c17;--panel:#111827;--panel2:#172033;--text:#f8fafc;--muted:#94a3b8;--line:#293548;--accent:#8b5cf6;--accent2:#a78bfa;--good:#34d399;--warn:#fbbf24;--danger:#fb7185}
+    *{box-sizing:border-box} body{margin:0;min-height:100vh;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at top,#18213a 0,#080c17 52%);color:var(--text)}
+    .wrap{width:min(100% - 28px,980px);margin:0 auto;padding:34px 0 52px}.hero{text-align:center;margin-bottom:24px}.hero h1{font-size:clamp(30px,6vw,52px);line-height:1;margin:0 0 10px}.hero p{margin:0;color:var(--muted);font-size:15px}.badge{display:inline-flex;gap:8px;align-items:center;background:#1a2337;border:1px solid var(--line);border-radius:999px;padding:7px 11px;color:#c4b5fd;font-size:12px;font-weight:700;margin-bottom:15px;text-transform:uppercase;letter-spacing:.08em}
+    .grid{display:grid;grid-template-columns:1.08fr .92fr;gap:16px}.card{background:rgba(17,24,39,.94);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 18px 50px rgba(0,0,0,.24)}.tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}.tab,.btn{border:1px solid var(--line);background:#121b2c;color:var(--text);border-radius:11px;min-height:44px;padding:0 15px;font-weight:750;cursor:pointer}.tab.active,.btn.primary{background:var(--accent);border-color:var(--accent)}.tab:hover,.btn:hover{filter:brightness(1.08)}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}.field{display:block;color:#dbe4f0;font-size:13px;font-weight:700}.field span{display:block;margin-bottom:6px}.field small{font-weight:500;color:var(--muted)}input,select{width:100%;min-height:45px;border-radius:10px;border:1px solid #334155;background:#0b1220;color:var(--text);padding:10px 11px;font:inherit;outline:none}input:focus,select:focus{border-color:var(--accent2);box-shadow:0 0 0 3px rgba(139,92,246,.18)}
+    .hint{color:var(--muted);font-size:12px;line-height:1.55;margin:4px 0 15px}.actions{display:flex;gap:9px;flex-wrap:wrap}.message{min-height:20px;color:var(--danger);font-size:13px;margin-top:11px}.results{display:grid;gap:12px}.result{background:#0c1424;border:1px solid var(--line);border-radius:15px;padding:16px}.result .label{color:var(--muted);font-size:11px;letter-spacing:.11em;font-weight:800}.result .value{font-size:clamp(25px,5vw,38px);font-weight:900;margin-top:5px;overflow-wrap:anywhere}.result .sub{font-size:12px;color:var(--muted);line-height:1.45;margin-top:5px}.mini{display:grid;grid-template-columns:1fr 1fr;gap:12px}.mini .value{font-size:22px}.rules{margin-top:12px;border:1px solid var(--line);border-radius:14px;padding:13px;color:var(--muted);font-size:12px;line-height:1.55;background:rgba(23,32,51,.65)}.rules strong{color:var(--text)}.footer{text-align:center;color:#64748b;font-size:11px;margin-top:18px}.hidden{display:none!important}
+    @media(max-width:760px){.grid{grid-template-columns:1fr}.row{grid-template-columns:1fr}.wrap{width:min(100% - 20px,980px);padding-top:22px}.card{padding:15px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero"><div class="badge">⚔ Dungeon Quest Tool</div><h1>Pot Calculator</h1><p>Calculate max potential and estimate the gold needed to finish an item.</p></header>
+    <div class="grid">
+      <section class="card">
+        <div class="tabs" role="group" aria-label="Input mode"><button class="tab active" id="modeCurrent" type="button">Current item</button><button class="tab" id="modeClean" type="button">Clean / base item</button></div>
+        <div class="row">
+          <label class="field"><span>Item type</span><select id="itemType"><option value="weapon">Weapon</option><option value="armor">Armor</option></select></label>
+          <label class="field"><span>Stat</span><select id="statType"></select></label>
+        </div>
+        <div id="currentFields" class="row">
+          <label class="field"><span>Current stat</span><input id="currentStat" inputmode="numeric" placeholder="e.g. 62000000" /></label>
+          <label class="field"><span>Upgrades already used</span><input id="usedUpgrades" inputmode="numeric" value="0" placeholder="e.g. 120" /></label>
+        </div>
+        <div id="cleanFields" class="hidden">
+          <label class="field"><span>Clean / base stat</span><input id="baseStat" inputmode="numeric" placeholder="e.g. 62000000" /></label>
+          <div style="height:12px"></div>
+        </div>
+        <div class="row">
+          <label class="field"><span>Total max upgrades</span><input id="totalUpgrades" inputmode="numeric" placeholder="e.g. 700" /></label>
+          <label class="field"><span>Next upgrade cost <small>(optional)</small></span><input id="nextCost" inputmode="numeric" placeholder="e.g. 48500" /></label>
+        </div>
+        <p class="hint">For an already-upgraded item, this assumes the upgrades you entered were placed into the selected stat. Add the current Blacksmith price for a tighter gold estimate.</p>
+        <div class="actions"><button id="calculate" type="button" class="btn primary">Calculate pot</button><button id="reset" type="button" class="btn">Reset</button></div>
+        <div id="message" class="message" aria-live="polite"></div>
+      </section>
 
-<html>
-	<head>
-		<title>Hicham Baydoun</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-	</head>
-	<body class="is-preload">
-
-		
-			<div id="header">
-				<span class="logo icon fa-paper-plane"></span>
-				<h1>Hi. This is Hicham Baydoun.</h1>
-				<p>A second year computer science student at LAU Beirut <a href="https://www.lau.edu.lb/">LAU</a>
-				<br />
-				Currently in my
-				undergrad years. A lifetime learner and very good problem solver that loves working in a team. 
-			</div>
-
-		
-			<div id="main">
-
-				<header class="major container medium">
-					<h2>
-					<br />
-					Some projects i made 
-					<br />
-					</h2>
-					
-				</header>
-
-				<div class="box alt container">
-					<section class="feature left">
-						<a href="https://www.roblox.com/games/8157604962/maze-survival" class="image icon solid fa-gamepad"><img src="images/pic01.jpg" alt="" /></a>
-						<div class="content">
-							<h3>maze survival</h3>
-							<p>A roblox survival game where you are out in a maze that is randomly generated with monsteres along side it trying to kill the player.</p>
-						</div>
-					</section>
-					<section class="feature right">
-						<a href="#" class="image icon solid fa-gamepad"><img src="images/pic02.jpg" alt="" /></a>
-						<div class="content">
-							<h3>PARKOUR GAME, KHADDIT ACADEMY, ONLINE</h3>
-							<p>Initiated the game idea, characters, story and development. Worked with a team to build the movements and design of the characters. Designed the overall game platforms. Programmed the parkour obstacles and functionality of the characters currently.</p>
-						</div>
-					</section>
-					<section class="feature left">
-						<a href="#" class="image icon solid fa-gamepad"><img src="images/pic03.jpg" alt="" /></a>
-						<div class="content">
-							<h3>SAIL for Change gaming academy</h3>
-							<p>working on a online first person shooter as a project for the game academy internship initiated the idea working on the story-character development-wapons and more.</p>
-						</div>
-					</section>
-				</div>
-
-				<footer class="major container medium">
-					<h3>My Resume</h3>
-					<p></p>
-					<ul class="actions special">
-						<li><a href="https://drive.google.com/file/d/1f97c-p6ytLkdGtWvNlgiel22qpb7WZnD/view?usp=drive_link" class="button">View CVs </class></a></li>
-					</ul>
-					
-				</footer>
-
-			</div>
-
-		<!-- Footer -->
-		<div id="footer">
-			<div class="container medium">
-				<header class="major last">
-					<h2>want to get in touch?</h2>
-				</header>
-	
-				<p>hit me up with a message.</p>
-	
-				<form id="contact-form">
-					<div class="row">
-						<div class="col-6 col-12-mobilep">
-							<input type="text" name="name" id="name" placeholder="Name" required />
-						</div>
-						<div class="col-6 col-12-mobilep">
-							<input type="email" name="email" id="email" placeholder="Email" required />
-						</div>
-						<div class="col-12">
-							<textarea name="message" id="message" placeholder="Message" rows="6" required></textarea>
-						</div>
-						<div class="col-12">
-							<ul class="actions special">
-								<li><input type="submit" value="Send Message" /></li>
-							</ul>
-						</div>
-					</div>
-				</form>
-	
-				<ul class="icons">
-					<li><a href="https://www.linkedin.com/in/hicham-baydoun/" class="icon brands fa-linkedin"><span class="label">Linkedin</span></a></li>
-					<li><a href="https://github.com/Hicham-Baydoun" class="icon brands fa-github"><span class="label">Github</span></a></li>
-					<li><a href="https://discord.gg/dCPK8fjuWF" class="icon brands fa-discord"><span class="label">discord</span></a></li>
-					<li><a href="https://www.instagram.com/hicham.baydoun_/" class="icon brands fa-instagram"><span class="label">instagram</span></a></li>
-					<li><a href="https://www.reddit.com/user/Hicham_Baydoun-/" class="icon brands fa-reddit"><span class="label">reddit</span></a></li>
-				</ul>
-	
-				<ul class="copyright">
-					<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-				</ul>
-			</div>
-		</div>
-	
-		<!-- Scripts -->
-		<script src="assets/js/jquery.min.js"></script>
-		<script src="assets/js/browser.min.js"></script>
-		<script src="assets/js/breakpoints.min.js"></script>
-		<script src="assets/js/util.js"></script>
-		<script src="assets/js/main.js"></script>
-		<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-		<script>
-			(function(){
-				emailjs.init("7NUhYA1XjBRX6qpii");
-			})();
-	
-			document.getElementById('contact-form').addEventListener('submit', function(event) {
-				event.preventDefault();
-	
-				emailjs.sendForm('service_l51xn2e', 'template_qnivb9o', this)
-					.then(function(response) {
-						console.log('SUCCESS!', response.status, response.text);
-						alert('Message sent successfully!');
-					}, function(error) {
-						console.log('FAILED...', error);
-						alert('Failed to send message.');
-					});
-			});
-		</script>
-	</body>
-	</html>
+      <aside class="results">
+        <div class="result"><div class="label">MAX POTENTIAL</div><div id="potential" class="value">—</div><div id="potentialNote" class="sub">Enter your item stats.</div></div>
+        <div class="mini"><div class="result"><div class="label">PER UPGRADE</div><div id="perUpgrade" class="value">—</div></div><div class="result"><div class="label">REMAINING</div><div id="remaining" class="value">—</div></div></div>
+        <div class="result"><div class="label">GOLD TO MAX</div><div id="gold" class="value">—</div><div id="goldNote" class="sub">Gold before the cap is an estimate.</div></div>
+        <div class="rules"><strong>Calculator rule:</strong> upgrade gain is based on the item's base stat and capped at <strong>+10 stat per upgrade</strong>. The gold estimator treats <strong>100,000 gold</strong> as the capped upgrade price after the high-upgrade threshold.</div>
+      </aside>
+    </div>
+    <div class="footer">Fan-made Dungeon Quest calculator • Not affiliated with Roblox or Dungeon Quest</div>
+  </main>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  let mode = 'current';
+  const modeCurrent=$('modeCurrent'),modeClean=$('modeClean'),currentFields=$('currentFields'),cleanFields=$('cleanFields');
+  const itemType=$('itemType'),statType=$('statType');
+  function num(el){const raw=String(el.value||'').replace(/[,\s]/g,'').trim();if(!raw)return null;const n=Number(raw);return Number.isFinite(n)?n:null}
+  function int(el){const n=num(el);return n===null?null:Math.floor(n)}
+  function fmt(n){return Number.isFinite(n)?Math.round(n).toLocaleString('en-US'):'—'}
+  function compact(n){if(!Number.isFinite(n))return'—';const a=Math.abs(n);const f=(v,s)=>v.toFixed(v>=100?1:2).replace(/\.00$/,'').replace(/(\.\d)0$/,'$1')+s;if(a>=1e12)return f(n/1e12,'T');if(a>=1e9)return f(n/1e9,'B');if(a>=1e6)return f(n/1e6,'M');if(a>=1e3)return f(n/1e3,'K');return fmt(n)}
+  function gain(base){if(!Number.isFinite(base)||base<0)return null;return Math.min(10,Math.floor(base*.05+1))}
+  function candidates(current,used){if(used===0)return[{base:current,gain:gain(current)}];const out=[];for(let g=1;g<=10;g++){const base=current-used*g;if(base>=0&&gain(base)===g)out.push({base,gain:g})}return out}
+  function goldEstimate(used,total,next){const CAP_AT=466,CAP=100000,remaining=Math.max(0,total-used);if(!remaining)return{value:0,note:'Item is already maxed.'};if(used>=CAP_AT)return{value:remaining*CAP,note:'Exact using the 100K-per-upgrade capped price.'};const preEnd=Math.min(total,CAP_AT),preCount=Math.max(0,preEnd-used),postCount=Math.max(0,total-Math.max(used,CAP_AT));let pre=0;if(next!==null&&next>0){const c0=Math.min(CAP,next),steps=Math.max(1,CAP_AT-used),r=c0>=CAP?1:Math.pow(CAP/c0,1/steps);for(let j=0;j<preCount;j++)pre+=Math.min(CAP,c0*Math.pow(r,j));return{value:pre+postCount*CAP,note:'Estimate calibrated from the next Blacksmith upgrade price you entered.'}}const c0=100,r=Math.pow(CAP/c0,1/CAP_AT);for(let i=used;i<preEnd;i++)pre+=Math.min(CAP,c0*Math.pow(r,i));return{value:pre+postCount*CAP,note:'Rough estimate. Enter the current next-upgrade price for a better number.'}}
+  function refreshStats(){const old=statType.value;const vals=itemType.value==='armor'?['Physical Power','Spell Power','Health']:['Physical Power','Spell Power'];statType.innerHTML='';vals.forEach(v=>{const o=document.createElement('option');o.value=o.textContent=v;statType.appendChild(o)});if(vals.includes(old))statType.value=old}
+  function setMode(v){mode=v;const c=v==='current';currentFields.classList.toggle('hidden',!c);cleanFields.classList.toggle('hidden',c);modeCurrent.classList.toggle('active',c);modeClean.classList.toggle('active',!c);$('message').textContent=''}
+  function clear(){['potential','perUpgrade','remaining','gold'].forEach(id=>$(id).textContent='—');$('potentialNote').textContent='Enter your item stats.';$('goldNote').textContent='Gold before the cap is an estimate.'}
+  function calc(){let total=int($('totalUpgrades')),used=mode==='current'?int($('usedUpgrades')):0;$('message').textContent='';if(total===null||total<0||used===null||used<0){$('message').textContent='Enter valid non-negative upgrade numbers.';clear();return}if(used>total){$('message').textContent='Upgrades already used cannot exceed total max upgrades.';clear();return}let lo,hi,glo,ghi,note;if(mode==='clean'){const base=num($('baseStat'));if(base===null||base<0){$('message').textContent='Enter the clean/base stat.';clear();return}const g=gain(base);lo=hi=base+total*g;glo=ghi=g;note='Exact from clean/base stat.'}else{const current=num($('currentStat'));if(current===null||current<0){$('message').textContent='Enter the current stat.';clear();return}const cs=candidates(current,used);if(!cs.length){$('message').textContent='These numbers do not match a single-stat upgrade path. Try Clean / base item if upgrades were split.';clear();return}const pots=cs.map(c=>c.base+total*c.gain),gs=cs.map(c=>c.gain);lo=Math.min(...pots);hi=Math.max(...pots);glo=Math.min(...gs);ghi=Math.max(...gs);note=lo===hi?'Calculated from current stat and remaining upgrades.':'A range is shown because multiple base rolls can fit these numbers.'}
+    $('potential').textContent=lo===hi?fmt(lo):fmt(lo)+' – '+fmt(hi);$('potentialNote').textContent=statType.value+' • '+note;$('perUpgrade').textContent=glo===ghi?'+'+glo:'+'+glo+' – +'+ghi;$('remaining').textContent=fmt(total-used);const ge=goldEstimate(used,total,num($('nextCost')));$('gold').textContent=compact(ge.value)+' gold';$('gold').title=fmt(ge.value)+' gold';$('goldNote').textContent=ge.note+' Estimated full amount: '+fmt(ge.value)+' gold.'}
+  modeCurrent.addEventListener('click',()=>setMode('current'));modeClean.addEventListener('click',()=>setMode('clean'));itemType.addEventListener('change',refreshStats);$('calculate').addEventListener('click',calc);$('reset').addEventListener('click',()=>{$('currentStat').value='';$('usedUpgrades').value='0';$('baseStat').value='';$('totalUpgrades').value='';$('nextCost').value='';itemType.value='weapon';refreshStats();setMode('current');clear()});document.querySelectorAll('input').forEach(i=>i.addEventListener('keydown',e=>{if(e.key==='Enter')calc()}));refreshStats();
+})();
+</script>
+</body>
+</html>
